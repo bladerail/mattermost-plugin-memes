@@ -1,0 +1,7 @@
+example:
+  - They don't know that I can pass all tests on the first try
+slots:
+  - x: 250
+    y: 20
+    width: 350
+    height: 100

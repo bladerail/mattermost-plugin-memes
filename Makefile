@@ -32,7 +32,7 @@ apply:
 
 ## Runs golangci-lint and eslint.
 .PHONY: check-style
-check-style: webapp/.npminstall golangci-lint
+check-style: webapp/.npminstall revive-lint
 	@echo Checking for style guide compliance
 
 ifneq ($(HAS_WEBAPP),)
@@ -40,15 +40,15 @@ ifneq ($(HAS_WEBAPP),)
 endif
 
 ## Run golangci-lint on codebase.
-.PHONY: golangci-lint
-golangci-lint:
-	@if ! [ -x "$$(command -v golangci-lint)" ]; then \
-		echo "golangci-lint is not installed. Please see https://github.com/golangci/golangci-lint#install for installation instructions."; \
+.PHONY: revive-lint
+revive-lint:
+	@if ! [ -x "$$(command -v revive)" ]; then \
+		echo "revive is not installed. Please see https://github.com/golangci/golangci-lint#install for installation instructions."; \
 		exit 1; \
 	fi; \
 
-	@echo Running golangci-lint
-	golangci-lint run ./...
+	@echo Running revive
+	revive ./...
 
 ## Builds the server, if it exists, including support for multiple architectures.
 .PHONY: server

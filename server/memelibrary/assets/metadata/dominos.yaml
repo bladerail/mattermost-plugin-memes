@@ -1,0 +1,12 @@
+example:
+  - Butterfly flaps it's wings
+  - Earthquake on the other side of the world
+slots:
+  - x: 20
+    y: 5
+    width: 300
+    height: 100
+  - x: 300
+    y: 460
+    width: 300
+    height: 60

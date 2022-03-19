@@ -1,0 +1,24 @@
+aliases:
+  - big-brain
+example:
+  - Install passes
+  - Lint passes
+  - Container Scanning passes
+  - Build passes
+slots:
+  - x: 5
+    y: 0
+    width: 400
+    height: 300
+  - x: 5
+    y: 300
+    width: 400
+    height: 300
+  - x: 5
+    y: 590
+    width: 400
+    height: 300
+  - x: 5
+    y: 900
+    width: 400
+    height: 300

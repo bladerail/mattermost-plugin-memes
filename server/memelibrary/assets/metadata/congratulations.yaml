@@ -1,0 +1,12 @@
+example:
+  - Gaining MMR
+  - Me going 0-17
+slots:
+  - x: 20
+    y: 180
+    width: 200
+    height: 120
+  - x: 280
+    y: 260
+    width: 200
+    height: 80

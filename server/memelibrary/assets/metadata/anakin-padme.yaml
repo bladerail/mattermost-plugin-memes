@@ -1,0 +1,17 @@
+example:
+  - I just bought 10 steam games during the summer sale
+  - You're going to do it, right?
+  - You're going to do it, right?
+slots:
+  - x: 30
+    y: 340
+    width: 350
+    height: 60
+  - x: 460
+    y: 340
+    width: 350
+    height: 60
+  - x: 460
+    y: 780
+    width: 350
+    height: 60

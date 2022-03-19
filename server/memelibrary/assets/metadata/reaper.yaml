@@ -1,0 +1,22 @@
+example:
+  - Thanos
+  - Call of Duty
+  - Battlefield
+  - Halo Infinite
+slots:
+  - x: 280
+    y: 150
+    width: 50
+    height: 60
+  - x: 20
+    y: 80
+    width: 80
+    height: 40
+  - x: 170
+    y: 90
+    width: 60
+    height: 40
+  - x: 360
+    y: 60
+    width: 80
+    height: 60

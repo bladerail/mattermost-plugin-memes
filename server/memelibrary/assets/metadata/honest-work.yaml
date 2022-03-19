@@ -1,0 +1,7 @@
+example:
+  - Fixing bugs by switching them off and on again
+slots:
+  - x: 5
+    y: 0
+    width: 800
+    height: 150

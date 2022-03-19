@@ -1,0 +1,9 @@
+aliases:
+  - depressed
+example:
+  - PDPS be like
+slots:
+  - x: 100
+    y: 270
+    width: 500
+    height: 80

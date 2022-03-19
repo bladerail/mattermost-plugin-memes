@@ -20,12 +20,13 @@ type Pattern struct {
 }
 
 type Slot struct {
-	X         int
-	Y         int
-	Width     int
-	Height    int
-	Font      string
-	TextColor []int `yaml:"text_color"`
+	X            int
+	Y            int
+	Width        int
+	Height       int
+	Font         string
+	TextColor    []int `yaml:"text_color"`
+	AllUppercase *bool `yaml:"all_uppercase"`
 }
 
 type Metadata struct {
@@ -75,6 +76,9 @@ func (m *Metadata) TextSlots(bounds image.Rectangle) (slots []*meme.TextSlot) {
 			}
 			if c := sliceToColor(slot.TextColor); c != nil {
 				textSlot.TextColor = c
+			}
+			if uc := slot.AllUppercase; uc != nil {
+				textSlot.AllUppercase = *uc
 			}
 			slots = append(slots, textSlot)
 		}

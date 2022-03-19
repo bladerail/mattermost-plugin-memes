@@ -1,0 +1,22 @@
+example:
+  - Install passes
+  - Lint passes
+  - Container Scanning passes
+  - Build passes
+slots:
+  - x: 10
+    y: 10
+    width: 250
+    height: 200
+  - x: 10
+    y: 232
+    width: 250
+    height: 200
+  - x: 10
+    y: 455
+    width: 250
+    height: 200
+  - x: 10
+    y: 677
+    width: 250
+    height: 200

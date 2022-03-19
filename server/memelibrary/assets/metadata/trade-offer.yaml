@@ -1,0 +1,14 @@
+aliases:
+  - you-receive-i-receive
+example:
+  - Your soul
+  - Scholarship
+slots:
+  - x: 20
+    y: 200
+    width: 250
+    height: 150
+  - x: 320
+    y: 200
+    width: 250
+    height: 150

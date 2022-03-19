@@ -33,3 +33,16 @@ For convenience, you can run the plugin from your terminal to preview an image f
 `go run server/plugin.go -out demo.jpg 'memes. memes everywhere' && open demo.jpg`
 
 This is especially useful when adding or modifying memes as you can quickly modify assets, `make memelibrary`, and preview the result using the above command. (See the files in ` memelibrary/assets` to get started with that.)
+
+## Example commands
+`go run server/plugin.go -out demo.jpg 'delete all the things!'`
+
+Full arguments: Meme and double-quoted string arguments
+`go run server/plugin.go -out demo.jpg 'sure-grandma "I remember when 56KBPS was the best" "sure grandma lets get you to bed"'`
+
+Using a pattern: No string separated arguments, just pure pattern matching
+`go run server/plugin.go -out demo.jpg 'I remember when 56kbps was the best sure grandma'`
+
+## Future Dev
+Rotate text to fit some meme formats e.g. Change my mind
+Fonts?

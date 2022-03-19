@@ -1,0 +1,16 @@
+aliases:
+  - osborne
+  - norman-osborne
+  - scientist
+example:
+  - Periodic Table
+  - You know, I'm somewhat of a scientist myself
+slots:
+  - x: 200
+    y: 10
+    width: 800
+    height: 80
+  - x: 100
+    y: 500
+    width: 1000
+    height: 50

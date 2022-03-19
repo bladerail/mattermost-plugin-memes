@@ -1,0 +1,12 @@
+example:
+  - Do your work
+  - Meme on Mattermost
+slots:
+  - x: 650
+    y: 5
+    width: 500
+    height: 600
+  - x: 650
+    y: 620
+    width: 500
+    height: 600

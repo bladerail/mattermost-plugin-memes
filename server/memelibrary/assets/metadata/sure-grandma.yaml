@@ -1,0 +1,19 @@
+patterns:
+  - pattern: (.+) sure grandma
+    text:
+      - $1
+      - sure grandma, let's get you to bed
+    example: I remember when 56KBPS was the best sure grandma
+example:
+  - I remember the old roblox homepage format
+  - Sure grandma let's get you to bed
+slots:
+  - x: 20
+    y: 170
+    width: 200
+    height: 60
+    all_uppercase: true
+  - x: 250
+    y: 150
+    width: 150
+    height: 40
