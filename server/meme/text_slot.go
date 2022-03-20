@@ -1,7 +1,6 @@
 package meme
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"strings"
@@ -9,6 +8,7 @@ import (
 	"github.com/fogleman/gg"
 	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font"
+	"golang.org/x/image/math/fixed"
 )
 
 type HorizontalAlignment int
@@ -58,31 +58,49 @@ func (s *TextSlot) Render(dc *gg.Context, text string) {
 
 	outlineWidth := s.OutlineWidth // "stroke" size
 	if outlineWidth == 0 {
-		outlineWidth = 2
+		outlineWidth = 8
 	}
 
 	xStart := float64(s.Bounds.Min.X)
-	yStart := float64(s.Bounds.Min.Y)
 	xAlign := gg.Align(s.HorizontalAlignment)
-	fmt.Printf("xAlign %v\n", xAlign)
-
-	if s.VerticalAlignment == VerticalAlignment(Center) {
-		yStart = (float64(s.Bounds.Dy())-textHeight)/2.0 + float64(s.Bounds.Min.Y)
-		fmt.Printf("Here %v sMin %v sDy %v textHeight %v yStart %v\n", s.VerticalAlignment, s.Bounds.Min.Y, s.Bounds.Dy(), textHeight, yStart)
-
+	yStart := float64(s.Bounds.Min.Y)
+	switch s.VerticalAlignment {
+	case Top:
+		yStart = float64(s.Bounds.Min.Y)
+	case Middle:
+		yStart = (float64(s.Bounds.Dy())-textHeight)/2.0 +
+			float64(s.Bounds.Min.Y)
+	case Bottom:
+		yStart = float64(s.Bounds.Max.Y) - textHeight
+	default:
+		break
 	}
 
-	for dy := -outlineWidth; dy <= outlineWidth; dy++ {
-		for dx := -outlineWidth; dx <= outlineWidth; dx++ {
-			if dx*dx+dy*dy >= outlineWidth {
-				// give it rounded corners
-				continue
-			}
-			x := xStart + float64(dx)
-			y := yStart + float64(dy)
-			dc.DrawStringWrapped(text, x, y, 0, 0, float64(s.Bounds.Dx()), 1.0, xAlign)
-		}
+	// Some black magic to draw outline
+	offset := face.Metrics().Height / 256 * fixed.Int26_6(outlineWidth)
+	for _, delta := range []fixed.Point26_6{
+		{X: offset, Y: offset},
+		{X: -offset, Y: offset},
+		{X: -offset, Y: -offset},
+		{X: offset, Y: -offset},
+	} {
+		x := xStart + float64(delta.X)/64
+		y := yStart + float64(delta.Y)/64
+		dc.DrawStringWrapped(text, x, y, 0, 0, float64(s.Bounds.Dx()), 1.0, xAlign)
 	}
+
+	// for dy := -outlineWidth; dy <= outlineWidth; dy++ {
+	// 	for dx := -outlineWidth; dx <= outlineWidth; dx++ {
+	// 		if dx*dx+dy*dy >= outlineWidth {
+	// 			// give it rounded corners
+	// 			continue
+	// 		}
+
+	// 		x := xStart + float64(dx)
+	// 		y := yStart + float64(dy)
+	// 		dc.DrawStringWrapped(text, x, y, 0, 0, float64(s.Bounds.Dx()), 1.0, xAlign)
+	// 	}
+	// }
 
 	dc.SetColor(s.TextColor)
 	dc.DrawStringWrapped(text,
