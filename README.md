@@ -45,5 +45,8 @@ Using a pattern: No string separated arguments, just pure pattern matching
 
 `go run server/plugin.go -out demo.jpg 'boardroom "How do we improve EO?" "Develop faster" "Improve CI/CD" "Make memes on mattermost"'`
 ## Future Dev
-Rotate text to fit some meme formats e.g. Change my mind
-Fonts?
+Debug mode to draw the text boxes, and log out the current bounds
+Add above as a command maybe?
+Command line options to override font-colors, all_uppercase
+Upload images for corporate meme?
+Dynamic meme upload?
