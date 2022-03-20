@@ -12,6 +12,7 @@ slots:
     y: 130
     width: 200
     height: 60
+    font: Yacimiento-ExtraBold-Ex
   - x: 250
     y: 150
     width: 150
