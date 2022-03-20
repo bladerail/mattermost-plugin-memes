@@ -128,20 +128,18 @@ func faceForSlot(text string, fontt *opentype.Font, maxFontSize float64, width i
 	dc := gg.NewContext(10, 10)
 	face, _ := opentype.NewFace(fontt, &opentype.FaceOptions{
 		Size:    fontSize,
-		DPI:     fontSize * 0.25,
+		DPI:     72,
 		Hinting: font.HintingNone,
 	})
 	for fontSize >= 6.0 {
-		face, _ := opentype.NewFace(fontt, &opentype.FaceOptions{
+		face, _ = opentype.NewFace(fontt, &opentype.FaceOptions{
 			Size:    fontSize,
-			DPI:     fontSize * 0.25,
+			DPI:     72,
 			Hinting: font.HintingNone,
 		})
 		dc.SetFontFace(face)
 		lines := dc.WordWrap(text, float64(width))
-
 		w, h = dc.MeasureMultilineString(strings.Join(lines, "\n"), 1.0)
-
 		if w > float64(width) || h > float64(height) {
 			fontSize -= (fontSize + 9) / 10
 			continue

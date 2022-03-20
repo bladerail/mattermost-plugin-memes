@@ -43,6 +43,7 @@ Full arguments: Meme and double-quoted string arguments
 Using a pattern: No string separated arguments, just pure pattern matching
 `go run server/plugin.go -out demo.jpg 'I remember when 56kbps was the best sure grandma'`
 
+`go run server/plugin.go -out demo.jpg 'boardroom "How do we improve EO?" "Develop faster" "Improve CI/CD" "Make memes on mattermost"'`
 ## Future Dev
 Rotate text to fit some meme formats e.g. Change my mind
 Fonts?
