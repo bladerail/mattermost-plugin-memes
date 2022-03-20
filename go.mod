@@ -10,6 +10,7 @@ require (
 	github.com/mholt/archiver/v3 v3.3.0
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.6.1
+	github.com/fogleman/gg v1.3.0
 	golang.org/x/image v0.0.0-20200430140353-33d19683fad8
 	gopkg.in/yaml.v2 v2.3.0
 )

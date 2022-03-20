@@ -8,11 +8,10 @@ example:
   - I remember the old roblox homepage format
   - Sure grandma let's get you to bed
 slots:
-  - x: 20
-    y: 170
+  - x: 50
+    y: 130
     width: 200
     height: 60
-    all_uppercase: true
   - x: 250
     y: 150
     width: 150

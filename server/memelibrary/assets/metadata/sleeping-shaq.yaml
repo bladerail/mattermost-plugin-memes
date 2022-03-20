@@ -2,11 +2,11 @@ example:
   - Do your work
   - Meme on Mattermost
 slots:
-  - x: 0
+  - x: 5
     y: 20
-    width: 300
+    width: 200
     height: 250
-  - x: 0
+  - x: 5
     y: 360
-    width: 300
+    width: 310
     height: 250

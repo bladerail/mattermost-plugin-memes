@@ -26,7 +26,10 @@ type Slot struct {
 	Height       int
 	Font         string
 	TextColor    []int `yaml:"text_color"`
+	OutlineColor []int `yaml:"outline_color"`
+	OutlineWidth int   `yaml:"outline_width"`
 	AllUppercase *bool `yaml:"all_uppercase"`
+	Rotation     float64
 }
 
 type Metadata struct {
@@ -74,11 +77,21 @@ func (m *Metadata) TextSlots(bounds image.Rectangle) (slots []*meme.TextSlot) {
 				textSlot.OutlineColor = color.Black
 				textSlot.AllUppercase = true
 			}
-			if c := sliceToColor(slot.TextColor); c != nil {
-				textSlot.TextColor = c
+			if tc := sliceToColor(slot.TextColor); tc != nil {
+				textSlot.TextColor = tc
+			}
+			if oc := sliceToColor(slot.OutlineColor); oc != nil {
+				textSlot.OutlineColor = oc
+			}
+			if ow := slot.OutlineWidth; ow != 0 {
+				textSlot.OutlineWidth = ow
 			}
 			if uc := slot.AllUppercase; uc != nil {
 				textSlot.AllUppercase = *uc
+			}
+
+			if rot := slot.Rotation; rot != 0 {
+				textSlot.Rotation = rot
 			}
 			slots = append(slots, textSlot)
 		}

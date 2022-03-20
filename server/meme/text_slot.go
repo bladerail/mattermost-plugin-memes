@@ -3,16 +3,14 @@ package meme
 import (
 	"image"
 	"image/color"
-	"image/draw"
 	"strings"
-	"unicode"
 
+	"github.com/fogleman/gg"
 	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font"
-	"golang.org/x/image/math/fixed"
 )
 
-type HorizontalAlignment int
+type HorizontalAlignment gg.Align
 
 const (
 	Left   HorizontalAlignment = -1
@@ -36,163 +34,76 @@ type TextSlot struct {
 	VerticalAlignment   VerticalAlignment
 	TextColor           color.Color
 	OutlineColor        color.Color
+	OutlineWidth        int
 	AllUppercase        bool
+	Rotation            float64
 }
 
-func (s *TextSlot) Render(img draw.Image, text string) {
+func (s *TextSlot) Render(dc *gg.Context, text string) {
 	if s.AllUppercase {
 		text = strings.ToUpper(text)
 	}
+	dc.Push()
+	// Compute font size by taking measurement of a text
+	face := faceForSlot(text, s.Font, s.MaxFontSize, s.Bounds.Dx(), s.Bounds.Dy())
+	dc.SetFontFace(face)
 
-	layout := s.TextLayout(text)
-	if layout == nil {
-		return
+	rotCenterX := float64((s.Bounds.Min.X + s.Bounds.Dx()) / 2)
+	rotCenterY := float64((s.Bounds.Min.Y + s.Bounds.Dy()) / 2)
+
+	dc.RotateAbout(gg.Radians(s.Rotation),
+		rotCenterX, rotCenterY)
+	dc.SetColor(s.OutlineColor)
+
+	outlineWidth := s.OutlineWidth // "stroke" size
+	if outlineWidth == 0 {
+		outlineWidth = 2
 	}
-
-	textColor := s.TextColor
-	if textColor == nil {
-		textColor = color.Black
-	}
-
-	for i, line := range layout.Lines {
-		if s.OutlineColor != nil {
-			// it's okay, memes aren't supposed to look good
-			offset := layout.Face.Metrics().Height / 16
-			for _, delta := range []fixed.Point26_6{
-				{X: offset, Y: offset},
-				{X: -offset, Y: offset},
-				{X: -offset, Y: -offset},
-				{X: offset, Y: -offset},
-			} {
-				drawer := font.Drawer{
-					Dst:  img,
-					Src:  image.NewUniform(s.OutlineColor),
-					Face: layout.Face,
-					Dot:  layout.LinePositions[i].Add(delta),
-				}
-				drawer.DrawString(line)
+	for dy := -outlineWidth; dy <= outlineWidth; dy++ {
+		for dx := -outlineWidth; dx <= outlineWidth; dx++ {
+			if dx*dx+dy*dy >= outlineWidth {
+				// give it rounded corners
+				continue
 			}
+			x := float64(s.Bounds.Min.X) + float64(dx)
+			y := float64(s.Bounds.Min.Y) + float64(dy)
+			dc.DrawStringWrapped(text, x, y, 0, 0, float64(s.Bounds.Dx()), 1.0, gg.AlignLeft)
 		}
-
-		drawer := font.Drawer{
-			Dst:  img,
-			Src:  image.NewUniform(textColor),
-			Face: layout.Face,
-			Dot:  layout.LinePositions[i],
-		}
-		drawer.DrawString(line)
 	}
+
+	dc.SetColor(s.TextColor)
+	dc.DrawStringWrapped(text,
+		float64(s.Bounds.Min.X),
+		float64(s.Bounds.Min.Y),
+		0, 0, float64(s.Bounds.Dx()), 1.0, gg.AlignLeft)
+
+	dc.Pop()
 }
 
-type TextLayout struct {
-	Face          font.Face
-	Lines         []string
-	LinePositions []fixed.Point26_6
-}
-
-func (s *TextSlot) TextLayout(text string) *TextLayout {
-	fontSize := s.MaxFontSize
+func faceForSlot(text string, font *truetype.Font, maxFontSize float64, width int, height int) font.Face {
+	fontSize := maxFontSize
 	if fontSize == 0.0 {
-		fontSize = 80.0
+		fontSize = 80
 	}
 
-	hlimit := fixed.Int26_6(s.Bounds.Dx() * 64)
-	vlimit := fixed.Int26_6(s.Bounds.Dy() * 64)
-
+	dc := gg.NewContext(10, 10)
+	face := truetype.NewFace(font, &truetype.Options{
+		Size: fontSize,
+	})
 	for fontSize >= 6.0 {
-		face := truetype.NewFace(s.Font, &truetype.Options{
+		face = truetype.NewFace(font, &truetype.Options{
 			Size: fontSize,
 		})
-		lineLimit := s.Bounds.Dy() / int(face.Metrics().Height/64)
-		lines, widths := lines(face, text, hlimit)
-		if len(lines) > lineLimit {
+		dc.SetFontFace(face)
+		lines := dc.WordWrap(text, float64(width))
+
+		w, h := dc.MeasureMultilineString(strings.Join(lines, "\n"), 1.0)
+
+		if w > float64(width) || h > float64(height) {
 			fontSize -= (fontSize + 9) / 10
 			continue
 		}
-
-		layout := &TextLayout{
-			Face:          face,
-			Lines:         lines,
-			LinePositions: make([]fixed.Point26_6, len(lines)),
-		}
-
-		y := fixed.Int26_6(s.Bounds.Min.Y * 64)
-		totalHeight := face.Metrics().Height.Mul(fixed.Int26_6(len(lines) * 64))
-		switch s.VerticalAlignment {
-		case Middle:
-			y += (vlimit - totalHeight) / 2
-		case Bottom:
-			y += (vlimit - totalHeight)
-		}
-
-		for i, width := range widths {
-			x := fixed.Int26_6(s.Bounds.Min.X * 64)
-			switch s.HorizontalAlignment {
-			case Center:
-				x += (hlimit - width) / 2
-			case Right:
-				x += (hlimit - width)
-			}
-			y += face.Metrics().Height
-			layout.LinePositions[i] = fixed.Point26_6{
-				X: x,
-				Y: y,
-			}
-		}
-		return layout
+		break
 	}
-
-	return nil
-}
-
-func lines(face font.Face, text string, limit fixed.Int26_6) (lines []string, widths []fixed.Int26_6) {
-	for text != "" {
-		line, width, remaining := firstLine(face, text, limit)
-		if line == "" {
-			return nil, nil
-		}
-		lines = append(lines, line)
-		widths = append(widths, width)
-		text = remaining
-	}
-	return
-}
-
-func firstLine(face font.Face, text string, limit fixed.Int26_6) (string, fixed.Int26_6, string) {
-	text = strings.TrimSpace(text)
-
-	pos := 0
-	lastBreak := 0
-
-	var width fixed.Int26_6
-	var lastBreakWidth fixed.Int26_6
-
-	var prev rune = -1
-	for _, r := range text {
-		advance, ok := face.GlyphAdvance(r)
-		if !ok {
-			continue
-		}
-		if prev >= 0 {
-			advance += face.Kern(prev, r)
-		}
-
-		if unicode.IsSpace(r) && !unicode.IsSpace(prev) {
-			lastBreak = pos
-			lastBreakWidth = width
-		}
-
-		if width+advance > limit {
-			if lastBreak == 0 {
-				return string([]rune(text)[:pos]), width, string([]rune(text)[pos:])
-			}
-			return string([]rune(text)[:lastBreak]), lastBreakWidth, string([]rune(text)[lastBreak:])
-		}
-
-		pos++
-		width += advance
-		prev = r
-	}
-
-	return text, width, ""
+	return face
 }
