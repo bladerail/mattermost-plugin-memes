@@ -20,16 +20,18 @@ type Pattern struct {
 }
 
 type Slot struct {
-	X            int
-	Y            int
-	Width        int
-	Height       int
-	Font         string
-	TextColor    []int `yaml:"text_color"`
-	OutlineColor []int `yaml:"outline_color"`
-	OutlineWidth int   `yaml:"outline_width"`
-	AllUppercase *bool `yaml:"all_uppercase"`
-	Rotation     float64
+	X                   int
+	Y                   int
+	Width               int
+	Height              int
+	Font                string
+	TextColor           []int                    `yaml:"text_color"`
+	OutlineColor        []int                    `yaml:"outline_color"`
+	OutlineWidth        int                      `yaml:"outline_width"`
+	AllUppercase        *bool                    `yaml:"all_uppercase"`
+	VerticalAlignment   meme.VerticalAlignment   `yaml:"vertical_alignment"`
+	HorizontalAlignment meme.HorizontalAlignment `yaml:"horizontal_alignment"`
+	Rotation            float64
 }
 
 type Metadata struct {
@@ -93,6 +95,10 @@ func (m *Metadata) TextSlots(bounds image.Rectangle) (slots []*meme.TextSlot) {
 			if rot := slot.Rotation; rot != 0 {
 				textSlot.Rotation = rot
 			}
+
+			textSlot.VerticalAlignment = slot.VerticalAlignment
+			textSlot.HorizontalAlignment = slot.HorizontalAlignment
+
 			slots = append(slots, textSlot)
 		}
 		return
@@ -101,18 +107,20 @@ func (m *Metadata) TextSlots(bounds image.Rectangle) (slots []*meme.TextSlot) {
 	padding := bounds.Dy() / 20
 	return []*meme.TextSlot{
 		{
-			Bounds:       image.Rect(padding, padding, bounds.Dx()-padding, bounds.Dy()/4),
-			Font:         fonts["Anton-Regular"],
-			TextColor:    color.White,
-			OutlineColor: color.Black,
-			AllUppercase: true,
+			Bounds:            image.Rect(padding, padding, bounds.Dx()-padding, bounds.Dy()/4),
+			Font:              fonts["Anton-Regular"],
+			TextColor:         color.White,
+			OutlineColor:      color.Black,
+			AllUppercase:      true,
+			VerticalAlignment: 0,
 		},
 		{
-			Bounds:       image.Rect(padding, bounds.Dy()*3/4, bounds.Dx()-padding, bounds.Dy()-padding),
-			Font:         fonts["Anton-Regular"],
-			TextColor:    color.White,
-			OutlineColor: color.Black,
-			AllUppercase: true,
+			Bounds:            image.Rect(padding, bounds.Dy()*3/4, bounds.Dx()-padding, bounds.Dy()-padding),
+			Font:              fonts["Anton-Regular"],
+			TextColor:         color.White,
+			OutlineColor:      color.Black,
+			AllUppercase:      true,
+			VerticalAlignment: 0,
 		},
 	}
 }

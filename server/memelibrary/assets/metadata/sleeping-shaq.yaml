@@ -4,9 +4,14 @@ example:
 slots:
   - x: 5
     y: 20
-    width: 200
+    width: 310
     height: 250
+    horizontal_alignment: 1
+    vertical_alignment: 1
+
   - x: 5
     y: 360
     width: 310
     height: 250
+    horizontal_alignment: 1
+    vertical_alignment: 1
