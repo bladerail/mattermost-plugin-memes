@@ -1,6 +1,7 @@
 package meme
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"strings"
@@ -63,6 +64,7 @@ func (s *TextSlot) Render(dc *gg.Context, text string) {
 
 	xStart := float64(s.Bounds.Min.X)
 	xAlign := gg.Align(s.HorizontalAlignment)
+	fmt.Printf("H %v\n", xAlign)
 	yStart := float64(s.Bounds.Min.Y)
 	switch s.VerticalAlignment {
 	case Top:

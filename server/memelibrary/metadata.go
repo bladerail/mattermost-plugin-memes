@@ -25,12 +25,12 @@ type Slot struct {
 	Width               int
 	Height              int
 	Font                string
-	TextColor           []int                    `yaml:"text_color"`
-	OutlineColor        []int                    `yaml:"outline_color"`
-	OutlineWidth        int                      `yaml:"outline_width"`
-	AllUppercase        *bool                    `yaml:"all_uppercase"`
-	VerticalAlignment   meme.VerticalAlignment   `yaml:"vertical_alignment"`
-	HorizontalAlignment meme.HorizontalAlignment `yaml:"horizontal_alignment"`
+	TextColor           []int                     `yaml:"text_color"`
+	OutlineColor        []int                     `yaml:"outline_color"`
+	OutlineWidth        int                       `yaml:"outline_width"`
+	AllUppercase        *bool                     `yaml:"all_uppercase"`
+	VerticalAlignment   *meme.VerticalAlignment   `yaml:"vertical_alignment"`
+	HorizontalAlignment *meme.HorizontalAlignment `yaml:"horizontal_alignment"`
 	Rotation            float64
 }
 
@@ -96,9 +96,16 @@ func (m *Metadata) TextSlots(bounds image.Rectangle) (slots []*meme.TextSlot) {
 				textSlot.Rotation = rot
 			}
 
-			textSlot.VerticalAlignment = slot.VerticalAlignment
-			textSlot.HorizontalAlignment = slot.HorizontalAlignment
-
+			if va := slot.VerticalAlignment; va != nil {
+				textSlot.VerticalAlignment = *va
+			} else {
+				textSlot.VerticalAlignment = meme.Middle
+			}
+			if ha := slot.HorizontalAlignment; ha != nil {
+				textSlot.HorizontalAlignment = *ha
+			} else {
+				textSlot.HorizontalAlignment = meme.Center
+			}
 			slots = append(slots, textSlot)
 		}
 		return
@@ -107,20 +114,22 @@ func (m *Metadata) TextSlots(bounds image.Rectangle) (slots []*meme.TextSlot) {
 	padding := bounds.Dy() / 20
 	return []*meme.TextSlot{
 		{
-			Bounds:            image.Rect(padding, padding, bounds.Dx()-padding, bounds.Dy()/4),
-			Font:              fonts["Anton-Regular"],
-			TextColor:         color.White,
-			OutlineColor:      color.Black,
-			AllUppercase:      true,
-			VerticalAlignment: 0,
+			Bounds:              image.Rect(padding, padding, bounds.Dx()-padding, bounds.Dy()/4),
+			Font:                fonts["Anton-Regular"],
+			TextColor:           color.White,
+			OutlineColor:        color.Black,
+			AllUppercase:        true,
+			VerticalAlignment:   meme.Middle,
+			HorizontalAlignment: meme.Center,
 		},
 		{
-			Bounds:            image.Rect(padding, bounds.Dy()*3/4, bounds.Dx()-padding, bounds.Dy()-padding),
-			Font:              fonts["Anton-Regular"],
-			TextColor:         color.White,
-			OutlineColor:      color.Black,
-			AllUppercase:      true,
-			VerticalAlignment: 0,
+			Bounds:              image.Rect(padding, bounds.Dy()*3/4, bounds.Dx()-padding, bounds.Dy()-padding),
+			Font:                fonts["Anton-Regular"],
+			TextColor:           color.White,
+			OutlineColor:        color.Black,
+			AllUppercase:        true,
+			VerticalAlignment:   meme.Middle,
+			HorizontalAlignment: meme.Center,
 		},
 	}
 }
