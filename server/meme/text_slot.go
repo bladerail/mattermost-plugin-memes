@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/fogleman/gg"
-	"github.com/golang/freetype/truetype"
 	"golang.org/x/image/font"
+	"golang.org/x/image/font/opentype"
 	"golang.org/x/image/math/fixed"
 )
 
@@ -29,7 +29,7 @@ const (
 
 type TextSlot struct {
 	Bounds              image.Rectangle
-	Font                *truetype.Font
+	Font                *opentype.Font
 	MaxFontSize         float64
 	HorizontalAlignment HorizontalAlignment
 	VerticalAlignment   VerticalAlignment
@@ -61,6 +61,11 @@ func (s *TextSlot) Render(dc *gg.Context, text string) {
 		outlineWidth = 8
 	}
 
+	textColor := s.TextColor
+	if textColor == nil {
+		textColor = color.Black
+	}
+
 	xStart := float64(s.Bounds.Min.X)
 	xAlign := gg.Align(s.HorizontalAlignment)
 	yStart := float64(s.Bounds.Min.Y)
@@ -77,18 +82,20 @@ func (s *TextSlot) Render(dc *gg.Context, text string) {
 	}
 
 	// Some black magic to draw outline
-	offset := face.Metrics().Height / 256 * fixed.Int26_6(outlineWidth)
-	for _, delta := range []fixed.Point26_6{
-		{X: offset, Y: offset},
-		{X: -offset, Y: offset},
-		{X: -offset, Y: -offset},
-		{X: offset, Y: -offset},
-	} {
-		x := xStart + float64(delta.X)/64
-		y := yStart + float64(delta.Y)/64
-		dc.DrawStringWrapped(text, x, y, 0, 0, float64(s.Bounds.Dx()), 1.0, xAlign)
-	}
+	if s.OutlineColor != nil {
+		offset := face.Metrics().Height / 256 * fixed.Int26_6(outlineWidth)
+		for _, delta := range []fixed.Point26_6{
+			{X: offset, Y: offset},
+			{X: -offset, Y: offset},
+			{X: -offset, Y: -offset},
+			{X: offset, Y: -offset},
+		} {
+			x := xStart + float64(delta.X)/64
+			y := yStart + float64(delta.Y)/64
+			dc.DrawStringWrapped(text, x, y, 0, 0, float64(s.Bounds.Dx()), 0.8, xAlign)
+		}
 
+	}
 	// for dy := -outlineWidth; dy <= outlineWidth; dy++ {
 	// 	for dx := -outlineWidth; dx <= outlineWidth; dx++ {
 	// 		if dx*dx+dy*dy >= outlineWidth {
@@ -102,16 +109,16 @@ func (s *TextSlot) Render(dc *gg.Context, text string) {
 	// 	}
 	// }
 
-	dc.SetColor(s.TextColor)
+	dc.SetColor(textColor)
 	dc.DrawStringWrapped(text,
 		xStart,
 		yStart,
-		0, 0, float64(s.Bounds.Dx()), 1.0, xAlign)
+		0, 0, float64(s.Bounds.Dx()), 0.8, xAlign)
 
 	dc.Pop()
 }
 
-func faceForSlot(text string, font *truetype.Font, maxFontSize float64, width int, height int) (font.Face, float64, float64) {
+func faceForSlot(text string, fontt *opentype.Font, maxFontSize float64, width int, height int) (font.Face, float64, float64) {
 	fontSize := maxFontSize
 	if fontSize == 0.0 {
 		fontSize = 80
@@ -119,12 +126,16 @@ func faceForSlot(text string, font *truetype.Font, maxFontSize float64, width in
 	w := 0.0
 	h := 0.0
 	dc := gg.NewContext(10, 10)
-	face := truetype.NewFace(font, &truetype.Options{
-		Size: fontSize,
+	face, _ := opentype.NewFace(fontt, &opentype.FaceOptions{
+		Size:    fontSize,
+		DPI:     fontSize * 0.25,
+		Hinting: font.HintingNone,
 	})
 	for fontSize >= 6.0 {
-		face = truetype.NewFace(font, &truetype.Options{
-			Size: fontSize,
+		face, _ := opentype.NewFace(fontt, &opentype.FaceOptions{
+			Size:    fontSize,
+			DPI:     fontSize * 0.25,
+			Hinting: font.HintingNone,
 		})
 		dc.SetFontFace(face)
 		lines := dc.WordWrap(text, float64(width))
@@ -137,5 +148,6 @@ func faceForSlot(text string, font *truetype.Font, maxFontSize float64, width in
 		}
 		break
 	}
+
 	return face, w, h
 }

@@ -75,16 +75,14 @@ func (m *Metadata) TextSlots(bounds image.Rectangle) (slots []*meme.TextSlot) {
 				textSlot.Font = fonts[slot.Font]
 			} else {
 				textSlot.Font = fonts["Anton-Regular"]
+				textSlot.TextColor = color.White
+				textSlot.OutlineColor = color.Black
 			}
 			if tc := sliceToColor(slot.TextColor); tc != nil {
 				textSlot.TextColor = tc
-			} else {
-				textSlot.TextColor = color.Black
 			}
 			if oc := sliceToColor(slot.OutlineColor); oc != nil {
 				textSlot.OutlineColor = oc
-			} else {
-				textSlot.OutlineColor = color.Black
 			}
 			if ow := slot.OutlineWidth; ow != 0 {
 				textSlot.OutlineWidth = ow
