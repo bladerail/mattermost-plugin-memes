@@ -1,0 +1,10 @@
+slots:
+  - x: 330
+    y: 30
+    width: 350
+    height: 200
+    vertical_alignment: 0
+  - x: 465
+    y: 355
+    width: 300
+    height: 80
