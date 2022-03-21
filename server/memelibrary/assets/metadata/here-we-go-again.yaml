@@ -1,0 +1,11 @@
+aliases:
+  - gta
+slots:
+  - x: 50
+    y: 36
+    width: 800
+    height: 200
+  - x: 740
+    y: 380
+    width: 300
+    height: 144

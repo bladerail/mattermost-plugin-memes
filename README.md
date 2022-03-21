@@ -50,3 +50,25 @@ Add above as a command maybe?
 Command line options to override font-colors, all_uppercase
 Upload images for corporate meme?
 Dynamic meme upload?
+
+[Open dialog?](https://developers.mattermost.com/integrate/admin-guide/admin-interactive-dialogs/)
+Slash command to add memes into the assets folder, and a blank yml file
+Slash command to edit yml file?
+Slash command to download latest asset list?
+
+### Legacy Code
+```go
+// Draw rounded text outline, expensive when outlineWidth gets greater
+for dy := -outlineWidth; dy <= outlineWidth; dy++ {
+    for dx := -outlineWidth; dx <= outlineWidth; dx++ {
+        if dx*dx+dy*dy >= outlineWidth {
+            // give it rounded corners
+            continue
+        }
+
+        x := xStart + float64(dx)
+        y := yStart + float64(dy)
+        dc.DrawStringWrapped(text, x, y, 0, 0, float64(s.Bounds.Dx()), 1.0, xAlign)
+    }
+}
+```

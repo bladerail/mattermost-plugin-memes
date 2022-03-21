@@ -1,6 +1,7 @@
 package meme
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"strings"
@@ -27,6 +28,9 @@ const (
 	Bottom
 )
 
+const DEBUG = false
+const lineSpacing = 0.8
+
 type TextSlot struct {
 	Bounds              image.Rectangle
 	Font                *opentype.Font
@@ -40,7 +44,7 @@ type TextSlot struct {
 	Rotation            float64
 }
 
-func (s *TextSlot) Render(dc *gg.Context, text string) {
+func (s *TextSlot) Render(dc *gg.Context, text string, debug bool) {
 	if s.AllUppercase {
 		text = strings.ToUpper(text)
 	}
@@ -68,6 +72,10 @@ func (s *TextSlot) Render(dc *gg.Context, text string) {
 
 	xStart := float64(s.Bounds.Min.X)
 	xAlign := gg.Align(s.HorizontalAlignment)
+
+	// Bottom padding for the text, because the string measurements account for top-padding but not bottom
+	yAlign := 0.1
+
 	yStart := float64(s.Bounds.Min.Y)
 	switch s.VerticalAlignment {
 	case Top:
@@ -92,28 +100,26 @@ func (s *TextSlot) Render(dc *gg.Context, text string) {
 		} {
 			x := xStart + float64(delta.X)/64
 			y := yStart + float64(delta.Y)/64
-			dc.DrawStringWrapped(text, x, y, 0, 0, float64(s.Bounds.Dx()), 0.8, xAlign)
+			dc.DrawStringWrapped(text, x, y, 0, yAlign, float64(s.Bounds.Dx()), lineSpacing, xAlign)
 		}
 
 	}
-	// for dy := -outlineWidth; dy <= outlineWidth; dy++ {
-	// 	for dx := -outlineWidth; dx <= outlineWidth; dx++ {
-	// 		if dx*dx+dy*dy >= outlineWidth {
-	// 			// give it rounded corners
-	// 			continue
-	// 		}
-
-	// 		x := xStart + float64(dx)
-	// 		y := yStart + float64(dy)
-	// 		dc.DrawStringWrapped(text, x, y, 0, 0, float64(s.Bounds.Dx()), 1.0, xAlign)
-	// 	}
-	// }
 
 	dc.SetColor(textColor)
+	// dc.SetRGB(0.5, 0.5, 0.2)
 	dc.DrawStringWrapped(text,
 		xStart,
 		yStart,
-		0, 0, float64(s.Bounds.Dx()), 0.8, xAlign)
+		0, yAlign, float64(s.Bounds.Dx()), lineSpacing, xAlign)
+
+	if debug {
+		fmt.Printf("X %v Y %v W %v H %v\n", float64(s.Bounds.Min.X), float64(s.Bounds.Min.Y),
+			float64(s.Bounds.Dx()), float64(s.Bounds.Dy()))
+		dc.SetRGB(1, 0, 0)
+		dc.DrawRectangle(float64(s.Bounds.Min.X), float64(s.Bounds.Min.Y),
+			float64(s.Bounds.Dx()), float64(s.Bounds.Dy()))
+		dc.Stroke()
+	}
 
 	dc.Pop()
 }
@@ -139,8 +145,8 @@ func faceForSlot(text string, fontt *opentype.Font, maxFontSize float64, width i
 		})
 		dc.SetFontFace(face)
 		lines := dc.WordWrap(text, float64(width))
-		w, h = dc.MeasureMultilineString(strings.Join(lines, "\n"), 1.0)
-		if w > float64(width) || h > float64(height) {
+		w, h = dc.MeasureMultilineString(strings.Join(lines, "\n"), lineSpacing)
+		if w > float64(width) || h > float64(height)*lineSpacing {
 			fontSize -= (fontSize + 9) / 10
 			continue
 		}

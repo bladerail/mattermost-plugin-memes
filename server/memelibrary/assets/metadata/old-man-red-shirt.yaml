@@ -1,0 +1,13 @@
+aliases:
+  - shrug
+slots:
+  - x: 15
+    y: 5
+    width: 354
+    height: 64
+    text_color: [ 124, 124, 50 ]
+  - x: 15
+    y: 234
+    width: 354
+    height: 64
+    text_color: [ 124, 124, 50 ]
