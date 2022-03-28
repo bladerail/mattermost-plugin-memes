@@ -28,7 +28,7 @@ const (
 	Bottom
 )
 
-const DEBUG = false
+const DEBUG = true
 const lineSpacing = 0.8
 
 type TextSlot struct {
@@ -42,6 +42,7 @@ type TextSlot struct {
 	OutlineWidth        int
 	AllUppercase        bool
 	Rotation            float64
+	Copy                int
 }
 
 func (s *TextSlot) Render(dc *gg.Context, text string, debug bool) {

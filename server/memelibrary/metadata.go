@@ -32,6 +32,7 @@ type Slot struct {
 	VerticalAlignment   *meme.VerticalAlignment   `yaml:"vertical_alignment"`
 	HorizontalAlignment *meme.HorizontalAlignment `yaml:"horizontal_alignment"`
 	Rotation            float64
+	Copy                int
 }
 
 type Metadata struct {
@@ -107,6 +108,8 @@ func (m *Metadata) TextSlots(bounds image.Rectangle) (slots []*meme.TextSlot) {
 			} else {
 				textSlot.HorizontalAlignment = meme.Center
 			}
+
+			textSlot.Copy = slot.Copy
 			slots = append(slots, textSlot)
 		}
 		return

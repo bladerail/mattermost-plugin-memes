@@ -13,18 +13,33 @@ type Template struct {
 }
 
 func (t *Template) Render(text []string) (image.Image, error) {
-	// b := t.Image.Bounds()
-	// img := image.NewRGBA(image.Rect(0, 0, b.Dx(), b.Dy()))
 	dc := gg.NewContextForImage(t.Image)
 
-	// draw.Draw(img, img.Bounds(), t.Image, b.Min, draw.Src)
-
-	for i, slot := range t.TextSlots {
+	write, copy := t.filterSlots()
+	for i, slot := range write {
 		if i >= len(text) {
 			break
 		}
 		slot.Render(dc, text[i], DEBUG)
 	}
 
+	for _, slot := range copy {
+		if slot.Copy <= len(text) {
+			slot.Render(dc, text[slot.Copy-1], DEBUG)
+		}
+	}
+
 	return dc.Image(), nil
+}
+
+func (t *Template) filterSlots() (writeSlots []*TextSlot, copySlots []*TextSlot) {
+
+	for _, s := range t.TextSlots {
+		if s.Copy == 0 {
+			writeSlots = append(writeSlots, s)
+		} else {
+			copySlots = append(copySlots, s)
+		}
+	}
+	return writeSlots, copySlots
 }
