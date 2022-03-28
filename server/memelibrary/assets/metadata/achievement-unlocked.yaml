@@ -1,0 +1,6 @@
+slots:
+  - x: 140
+    y: 200
+    width: 440
+    height: 60
+    outline_width: 20

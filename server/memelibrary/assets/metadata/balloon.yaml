@@ -1,0 +1,25 @@
+aliases:
+  - running-away-balloon
+slots:
+  - x: 47
+    y: 310
+    width: 250
+    height: 100
+  - x: 470
+    y: 70
+    width: 200
+    height: 200
+  - x: 20
+    y: 720
+    width: 180
+    height: 100
+  - x: 280
+    y: 750
+    width: 160
+    height: 70
+    copy: 1
+  - x: 560
+    y: 580
+    width: 130
+    height: 120
+    copy: 2

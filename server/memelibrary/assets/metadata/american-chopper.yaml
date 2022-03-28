@@ -1,0 +1,21 @@
+slots:
+  - x: 90
+    y: 240
+    width: 460
+    height: 100
+  - x: 90
+    y: 600
+    width: 460
+    height: 100
+  - x: 90
+    y: 960
+    width: 460
+    height: 100
+  - x: 90
+    y: 1320
+    width: 460
+    height: 100
+  - x: 90
+    y: 1680
+    width: 460
+    height: 100
