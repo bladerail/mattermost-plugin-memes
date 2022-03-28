@@ -1,6 +1,4 @@
 aliases:
-  - most-interesting-man
-  - most-interesting-man-in-the-world
   - i-dont-always
 patterns:
   - pattern: (i don'?t always) (.+) (but .+) 

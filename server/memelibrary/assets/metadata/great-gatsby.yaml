@@ -1,6 +1,3 @@
-aliases:
-  - gatsby
-  - old-sport
 patterns:
   - pattern: (.*)\b(old sport[^a-z]*)
     text:

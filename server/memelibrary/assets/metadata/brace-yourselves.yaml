@@ -1,5 +1,4 @@
 aliases:
-  - brace-yourself
   - winter-is-coming
 patterns:
   - pattern: brace (yourselves|yourself)([^a-z]+)?\b([^,\.;]+.*)
