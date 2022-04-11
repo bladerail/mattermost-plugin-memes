@@ -28,7 +28,7 @@ const (
 	Bottom
 )
 
-const DEBUG = true
+const DEBUG = false
 const lineSpacing = 0.8
 
 type TextSlot struct {

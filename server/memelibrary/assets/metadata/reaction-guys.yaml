@@ -1,0 +1,9 @@
+slots:
+  - x: 46
+    y: 46
+    width: 520
+    height: 400
+  - x: 46
+    y: 500
+    width: 520
+    height: 400

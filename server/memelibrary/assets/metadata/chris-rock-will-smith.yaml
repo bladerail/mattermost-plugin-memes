@@ -1,0 +1,11 @@
+aliases:
+  - will-smith-chris-rock
+slots:
+  - x: 80
+    y: 20
+    width: 260
+    height: 100
+  - x: 320
+    y: 200
+    width: 200
+    height: 80
