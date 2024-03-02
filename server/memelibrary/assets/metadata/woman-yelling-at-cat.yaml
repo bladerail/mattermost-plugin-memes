@@ -1,0 +1,13 @@
+slots:
+  - x: 20
+    y: 5
+    width: 640
+    height: 90
+  - x: 60
+    y: 340
+    width: 200
+    height: 60
+  - x: 420
+    y: 170
+    width: 200
+    height: 50

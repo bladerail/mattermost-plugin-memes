@@ -1,0 +1,6 @@
+patterns:
+  - pattern: (.*) afraid-to-ask
+    text:
+      - $1
+      - and at this point I'm afraid to ask
+    example: i don't know what xyz is afraid-to-ask

@@ -1,0 +1,12 @@
+example:
+  - Install passes
+  - Lint passes
+slots:
+  - x: 70
+    y: 180
+    width: 800
+    height: 200
+  - x: 70
+    y: 580
+    width: 800
+    height: 200
